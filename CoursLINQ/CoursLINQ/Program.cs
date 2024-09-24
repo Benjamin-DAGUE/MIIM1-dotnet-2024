@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Transactions;
 
 namespace CoursLINQ;
 
@@ -191,37 +193,114 @@ internal class Program
 
         #region 1 - Afficher les personnes nées avant l'an 2000
 
+        Console.WriteLine("1 - Afficher les personnes nées avant l'an 2000");
+        contacts                                              //On part de la liste des personnes.
+            .Where(p => p.BirthDate.Year < 2000)            //On filtre pour conserver les personnes nées avant l'an 2000.
+            .ToList()                                       //On exécute la requête en créant une liste du réslutat.
+            .ForEach(p => Console.WriteLine(p.FullName));   //Pour chaque personne dans la liste du résultat, on affiche son nom et son prénom.
+
         #endregion
 
         #region 2 - Afficher les personnes nées en janvier et en février
+
+        Console.WriteLine();
+        Console.WriteLine();
+        Console.WriteLine("2 - Afficher les personnes nées en janvier et en février");
+        contacts
+            //.Where(p => new int[] { 1, 6 }.Contains(p.BirthDate.Month))
+            .Where(p => p.BirthDate.Month <= 2)
+            //.Where(p => p.BirthDate.Month <= 3)
+            .ToList()
+            .ForEach(p => Console.WriteLine(p.FullName));
 
         #endregion
 
         #region 3 - Afficher les personnes nées un samedi ou un dimanche
 
+        Console.WriteLine();
+        Console.WriteLine();
+        Console.WriteLine("3 - Afficher les personnes nées un samedi ou un dimanche");
+        contacts
+            //.Where(p => new[] { DayOfWeek.Saturday, DayOfWeek.Sunday }.Contains(p.BirthDate.DayOfWeek))
+            .Where(p => p.BirthDate.DayOfWeek == DayOfWeek.Saturday || p.BirthDate.DayOfWeek == DayOfWeek.Sunday)
+            .ToList()
+            .ForEach(p => Console.WriteLine(p.FullName));
+
         #endregion
 
         #region 4 - Afficher les personnes pour lesquelles le prénom a plus de 7 caractères
+
+        Console.WriteLine();
+        Console.WriteLine();
+        Console.WriteLine("4 - Afficher les personnes pour lesquelles le prénom a plus de 7 caractères");
+        contacts
+            .Where(p => p.FirstName.Length > 7)
+            .ToList()
+            .ForEach(p => Console.WriteLine(p.FullName));
 
         #endregion
 
         #region 5 - Afficher les personnes nées en janvier et en février et pour lesquelles le prénom a plus de 7 caractères
 
+        Console.WriteLine();
+        Console.WriteLine();
+        Console.WriteLine("5 - Afficher les personnes nées en janvier et en février et pour lesquelles le prénom a plus de 7 caractères");
+        contacts
+            .Where(p => p.BirthDate.Month <= 2 && p.FirstName.Length > 7)
+            //.Where(p => p.BirthDate.Month <= 2)
+            //.Where(p => p.FirstName.Length > 7)
+            .ToList()
+            .ForEach(p => Console.WriteLine(p.FullName));
+
         #endregion
 
         #region 6 - Calculer la moyenne d'age des personnes
+
+        Console.WriteLine();
+        Console.WriteLine();
+        Console.WriteLine("6 - Calculer la moyenne d'age des personnes");
+        double averageAge = contacts.Average(p => p.BirthDate.CalculateAge());
+        Console.WriteLine("L'âge moyen est : " + averageAge);
 
         #endregion
 
         #region 7 - Afficher les personnes de la plus ancienne à la plus jeune
 
+        Console.WriteLine();
+        Console.WriteLine();
+        Console.WriteLine("7 - Afficher les personnes de la plus ancienne à la plus jeune");
+        contacts
+            .OrderBy(p => p.BirthDate)
+            .ToList()
+            .ForEach(p => Console.WriteLine(p.FullName));
+
         #endregion
 
         #region 8 - Afficher les personnes dont l'age est supérieur à la moyenne d'âge
 
+        Console.WriteLine();
+        Console.WriteLine();
+        Console.WriteLine("8 - Afficher les personnes dont l'age est supérieur à la moyenne d'âge");
+        contacts
+            //Cette méthode calcul la moyenne d'âge plusieurs fois (une foi par personne présente dans la liste)
+            //.Where(p => p.BirthDate.CalculateAge() > contacts.Average(p => p.BirthDate.CalculateAge()))
+            .Where(p => p.BirthDate.CalculateAge() > averageAge)
+            .ToList()
+            .ForEach(p => Console.WriteLine(p.FullName));
+
         #endregion
 
-        #region 9 - Saisisez une chaîne et afficher les personnes dont le nom contient la recherche (non sensible à la casse)
+        #region 9 - Saisisez une chaîne et afficher les personnes dont le nom contient la recherche
+
+        Console.WriteLine();
+        Console.WriteLine();
+        Console.WriteLine("9 - Saisisez une chaîne et afficher les personnes dont le nom contient la recherche");
+        Console.Write("Votre recherche : ");
+        string search = Console.ReadLine() ?? "";
+        contacts
+            .Where(p => p.FullName.Contains(search, StringComparison.CurrentCultureIgnoreCase))
+            .ToList()
+            .ForEach(p => Console.WriteLine(p.FullName));
 
         #endregion
 
@@ -245,6 +324,40 @@ internal class Program
         ...
 
         */
+
+        string currentFirstLetter = "";
+
+        //contacts
+        //    .OrderBy(c => c.LastName)
+        //    .ThenBy(c => c.FirstName)
+        //    .ToList()
+        //    .ForEach(p =>
+        //    {
+        //        string firstLetter = p.LastName.Substring(1);
+
+        //        if (currentFirstLetter != firstLetter)
+        //        {
+        //            currentFirstLetter = firstLetter;
+        //            Console.WriteLine("-------");
+        //            Console.WriteLine(currentFirstLetter);
+        //            Console.WriteLine("-------");
+        //        }
+        //        Console.WriteLine(p.FullName);
+        //    });
+
+        foreach (var group in contacts.GroupBy(c => c.LastName.Substring(1))
+            .OrderBy(g => g.Key))
+        {
+            Console.WriteLine("-------");
+            Console.WriteLine(group.Key);
+            Console.WriteLine("-------");
+
+            foreach (var contact in group.OrderBy(c => c.LastName).ThenBy(c => c.FirstName))
+            {
+                Console.WriteLine(contact.FullName);
+            }
+        }
+
         #endregion
 
 

@@ -19,7 +19,6 @@ internal class Program
         
         Console.Write("et votre prénom ? ");
         contact.FirstName = Console.ReadLine() ?? string.Empty;
-        contact.FirstName.ToUpper();
         
         Console.Write("et votre date de naissance ? ");
         string birthdateString = Console.ReadLine() ?? string.Empty;
@@ -31,5 +30,4 @@ internal class Program
 
         Console.WriteLine(contact.ToString());
     }
-
 }
