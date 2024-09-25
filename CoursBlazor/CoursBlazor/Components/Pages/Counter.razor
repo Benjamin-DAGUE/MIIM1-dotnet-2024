@@ -11,7 +11,11 @@
 
 
 
-<PageAvecParametre Id="@currentCount">
+<PageAvecParametre @bind-Id="currentCount" @bind-Id:after=AfterIdChanged>
+
+</PageAvecParametre>
+
+<PageAvecParametre IdChanged="IdChangedInChildComponent">
 
 </PageAvecParametre>
 
@@ -22,5 +26,15 @@
     {
         //Ceci est exécuté côté serveur
         currentCount++;
+    }
+
+    private void IdChangedInChildComponent(int newValue)
+    {
+        currentCount = newValue;
+    }
+
+    private void AfterIdChanged()
+    {
+        
     }
 }
