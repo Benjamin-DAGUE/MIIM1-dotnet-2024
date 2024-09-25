@@ -1,0 +1,34 @@
+﻿@* 
+
+  La pagge APP.razor est le point d'entrée de la Web App. Il est possible ici de modifier le header.
+  Il est possible ici de définir le mode de rendu de manière globale au lieu de l'activer les composants qui nécessites de l'interactivité.
+
+*@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+    <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="CoursBlazor.styles.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <HeadOutlet @rendermode="_interactiveServerNoPrerender" />
+</head>
+
+<body>
+    @* La Web App est une Single Page App (SPA). après le chargement initial, c'est le routeur ci-dessous qui gère le chargement des pages et la navigation.*@
+    <Routes @rendermode="_interactiveServerNoPrerender" />
+    @* Le script ci-dessous permet la mise en place de l'interractivité InteractiveServer côté client. *@
+    <script src="_framework/blazor.web.js"></script>
+</body>
+
+</html>
+
+@code {
+    //InteractiveServer sans le pré-rendering : https://learn.microsoft.com/en-us/aspnet/core/blazor/components/prerender?view=aspnetcore-8.0
+    private InteractiveServerRenderMode _interactiveServerNoPrerender = new(false);
+}

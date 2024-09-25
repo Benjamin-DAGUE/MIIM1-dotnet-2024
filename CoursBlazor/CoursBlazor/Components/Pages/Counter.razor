@@ -1,0 +1,26 @@
+﻿@page "/counter"
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @currentCount</p>
+
+@* La prise en charge du rappel du serveur sur le onclick nécessite l'intéractivité. *@
+<button class="btn btn-primary" @onclick="IncrementCount">Click me FROM COUNTER</button>
+
+
+
+<PageAvecParametre Id="@currentCount">
+
+</PageAvecParametre>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        //Ceci est exécuté côté serveur
+        currentCount++;
+    }
+}
