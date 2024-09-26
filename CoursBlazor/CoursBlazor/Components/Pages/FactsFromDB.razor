@@ -1,0 +1,30 @@
+﻿@page "/facts-db"
+@inject FactFromDbService FactService
+
+<PageTitle>Facts</PageTitle>
+
+<h1>Facts</h1>
+
+<p>This component demonstrates showing data loaded from a service.</p>
+
+@if (facts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    @foreach (Fact fact in facts)
+    {
+        <span>@fact.Data</span>
+        <br />
+    }
+}
+
+@code {
+    private List<Fact>? facts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        facts = await FactService.GetFactsAsync(10);
+    }
+}
